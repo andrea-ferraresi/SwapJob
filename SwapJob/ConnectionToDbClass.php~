@@ -1,0 +1,48 @@
+<?php
+include_once("LogClass.php");
+
+class ConnectionToDbClass{
+    Var $connection;
+    Var $configurationDb;
+	Var $LoggerClassInstance;
+	  public static function getInstance() {
+      if(is_null($this->instance)) {
+          $this->instance = new LoggerClass();
+      }
+      return $this->instance;
+  }
+	
+
+   
+    function __construct(){
+		$this->configurationDb = parse_ini_file('./config/configDb.ini');
+ 
+        $this->connection= mysqli_connect('localhost',$config['username'],$config['password'],$config['dbname']);
+		
+	    if(!isset($connection))
+        if ($this->connection) {
+            $messageLog = $_SERVER['PHP_SELF'] . " Successfully connected to db";
+            $this->LoggerClassInstance->write($messageLog);
+        }
+        else {
+            $err = mysqli_connect_error();
+            $messageLog = $_SERVER['PHP_SELF'] . " " . $err['code'] . $err['message'];
+            $this->LoggerClassInstance->write($messageLog);
+        }
+        
+    }
+    
+    function getConnection(){
+        return $this->connection;
+    }
+    
+    
+    function closeConnection(){
+        OCILogoff($this->connection);
+    }
+    
+}
+
+
+
+?>
